@@ -1,0 +1,3 @@
+Network json needs to change insturments to lists and have them act as such in graph
+Make network search display informatin about musicans
+Gravity of lone graphs is too low
