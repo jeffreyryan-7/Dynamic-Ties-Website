@@ -116,7 +116,7 @@ export default function LandingPage() {
         </p>
         <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem' }}>
           In early 2024, a prototype focusing on just the Big 5 orchestras was built with help from <strong>Samarth Arul</strong> and <strong>Jonathan Zhang</strong>.
-          A year later, Jeffrey decided to continue the project--significantly upscaling to include 30+ orchestras, using the database to uncover new insights, and turning the results into a public recourse .
+          A year later, Jeffrey decided to continue the project--significantly upscaling to include 30+ orchestras, using the database to uncover new insights, and turning the results into a public resource.
         </p>
       </div>
 
@@ -150,7 +150,7 @@ export default function LandingPage() {
       <h2 className="text-xl font-semibold" style={{ fontSize: '1.5625rem' }}>Contact us</h2>
       <div style={{ height: "2.5px", backgroundColor: "#2d5fff", width: "100%", margin: "0.3125rem 0"}} />
       <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem', margin: "0.6875rem 0" }} >
-        Have any comments, questions, or concerns? Want to collaborate? Have ideas for future research? Reach out any time.
+        Have any comments, questions, or concerns? Want to collaborate? Have ideas for future research? Reach out anytime.
         <br />
         <span className="block mt-2 font-medium" style={{ fontSize: '1.25rem' }}>Jeffrey Ryan</span>
         <a href="mailto:jcr101402@gmail.com" className="text-blue-600 hover:underline" style={{ fontSize: '1.25rem' }}>jcr101402@gmail.com</a>

@@ -6,7 +6,7 @@ export default defineConfig(({ command }) => {
   const isProduction = command === 'build'
   
   return {
-    base: isProduction ? '/Dynamic-ties-website/' : '/',
+    base: '/',
     plugins: [react()],
     build: {
       assetsDir: 'assets',
