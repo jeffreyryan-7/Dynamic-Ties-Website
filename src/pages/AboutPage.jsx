@@ -124,15 +124,15 @@ export default function LandingPage() {
       <div style={{ height: "2.5px", backgroundColor: "#2d5fff", width: "100%", margin: "0.3125rem 0"}} />
       <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem', margin: "0.6875rem 0" }} >
         Dynamic Ties was built by pulling biographies from the websites of 32 major US orchestras. 
-        In particular, the goals was to discover who played in each orchestra,
+        In particular, the goal was to compile data on who played in each orchestra,
         what instrument(s) they play, where they went to school, and who they studied under.
       </p>
       <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem' }}>
         This approach does have a few major limitations. At the base level, not every performing orchestral 
-        musical has a bio on their orchestra's website--nor do these bios list 100% of the information we'd like to study.
-        Even if biographies were complete in scope, the way they are written is not standardized. This makes
-        manually reading and noting this information at scale, so natural language processing techniques
-        were used to compile these data as accurately as possible. 
+        musician has a bio on their orchestra's website--nor do these bios list 100% of the information we'd like to study.
+        Even if biographies were complete in scope, the way they are written is not standardized. 
+        Manually reading and recording this kind of information at scale is too time consuming, so natural language processing techniques
+        were used to systematically record these data quickly and accurately. 
         Despite these limitations, a significant amount of useful data has been sourced at around 90% accuracy.
       </p>
       <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem' }}>
