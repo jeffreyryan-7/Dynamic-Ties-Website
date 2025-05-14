@@ -69,7 +69,7 @@ const TestSigmaPage = () => {
     setLoadingMessage('Initializing network...');
 
     // Fetch the network data
-    fetch('/data/network.json')
+    fetch(import.meta.env.BASE_URL + '/data/network.json')
       .then(response => response.json())
       .then(data => {
         // Transform the data to match ForceGraph format

@@ -19,9 +19,11 @@ export default function DatabasePage() {
   const [filterSearch, setFilterSearch] = useState({});
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [dropdownMaxHeight, setDropdownMaxHeight] = useState('none');
+  const [columnWidths, setColumnWidths] = useState({});
   const titleRef = useRef(null);
   const dropdownRef = useRef(null);
   const headerRefs = useRef({});
+  const tableRef = useRef(null);
 
   const rowsPerPage = 100;
 
@@ -45,7 +47,7 @@ export default function DatabasePage() {
     }, 500);
 
     // Load CSV
-    fetch("/data/frontend_dataview.csv")
+    fetch(import.meta.env.BASE_URL + 'data/frontend_dataview.csv')
       .then((response) => response.text())
       .then((csvText) => {
         Papa.parse(csvText, {
@@ -59,6 +61,17 @@ export default function DatabasePage() {
               initialFilters[key] = new Set();
             });
             setFilters(initialFilters);
+
+            // Calculate initial column widths after data is loaded
+            if (tableRef.current) {
+              const widths = {};
+              const headers = tableRef.current.querySelectorAll('th');
+              headers.forEach(header => {
+                const col = header.textContent.trim();
+                widths[col] = header.offsetWidth;
+              });
+              setColumnWidths(widths);
+            }
           }
         });
       });
@@ -94,7 +107,9 @@ export default function DatabasePage() {
   const calculateDropdownHeight = (headerRect) => {
     const viewportHeight = window.innerHeight;
     const spaceBelow = viewportHeight - headerRect.bottom;
-    return spaceBelow - (3.5 * 16); // Stop 3.5em from bottom
+    const minSpace = 100; // Minimum space to leave at bottom
+    const maxHeight = Math.max(spaceBelow - minSpace, 200); // Minimum height of 200px
+    return `${maxHeight}px`;
   };
 
   // Update dropdown position when scrolling
@@ -102,15 +117,26 @@ export default function DatabasePage() {
     const updatePosition = () => {
       if (activeDropdown && headerRefs.current[activeDropdown]) {
         const rect = headerRefs.current[activeDropdown].getBoundingClientRect();
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+        
         setDropdownPosition({
-          top: rect.bottom + window.scrollY,
-          left: rect.left + window.scrollX
+          top: rect.bottom + scrollTop,
+          left: rect.left + scrollLeft
         });
+        
+        // Recalculate max height on scroll
+        setDropdownMaxHeight(calculateDropdownHeight(rect));
       }
     };
 
     window.addEventListener('scroll', updatePosition);
-    return () => window.removeEventListener('scroll', updatePosition);
+    window.addEventListener('resize', updatePosition);
+    
+    return () => {
+      window.removeEventListener('scroll', updatePosition);
+      window.removeEventListener('resize', updatePosition);
+    };
   }, [activeDropdown]);
 
   const handleSort = (key, direction) => {
@@ -296,7 +322,7 @@ export default function DatabasePage() {
         top: rect.bottom + window.scrollY,
         left: rect.left + window.scrollX
       });
-      setDropdownMaxHeight(`${calculateDropdownHeight(rect)}px`);
+      setDropdownMaxHeight(`${calculateDropdownHeight(rect)}`);
     }
 
     // Use setTimeout to ensure the loading state is visible
@@ -450,10 +476,16 @@ export default function DatabasePage() {
                       minWidth: 'fit-content',
                       overflow: 'visible'
                     }}>
-                      <table className="min-w-full table-auto border border-gray-300" style={{ 
-                        fontSize: '1.25rem',
-                        backgroundColor: 'var(--blue-dark)'
-                      }}>
+                      <table 
+                        ref={tableRef}
+                        className="min-w-full table-auto border border-gray-300" 
+                        style={{ 
+                          fontSize: '1.25rem',
+                          backgroundColor: 'var(--blue-dark)',
+                          tableLayout: 'fixed',
+                          width: '100%'
+                        }}
+                      >
                         <thead>
                           <tr className="bg-gray-200"
                               style={{backgroundColor: "#2d5fff"}}>
@@ -471,9 +503,11 @@ export default function DatabasePage() {
                                   userSelect: 'none',
                                   position: 'relative',
                                   minWidth: '150px',
-                                  width: 'auto',
+                                  width: '200px',
                                   whiteSpace: 'nowrap',
-                                  padding: '12px 16px'
+                                  padding: '12px 16px',
+                                  overflow: 'hidden',
+                                  textOverflow: 'ellipsis'
                                 }}
                               >
                                 <div style={{ 
@@ -496,9 +530,9 @@ export default function DatabasePage() {
                                   <div 
                                     ref={dropdownRef}
                                     style={{
-                                      position: 'absolute',
-                                      top: '100%',
-                                      left: '0',
+                                      position: 'fixed',
+                                      top: `${dropdownPosition.top}px`,
+                                      left: `${dropdownPosition.left}px`,
                                       backgroundColor: 'white',
                                       border: '1px solid #ccc',
                                       borderRadius: '4px',
@@ -508,7 +542,8 @@ export default function DatabasePage() {
                                       boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
                                       maxHeight: dropdownMaxHeight,
                                       display: 'flex',
-                                      flexDirection: 'column'
+                                      flexDirection: 'column',
+                                      overflow: 'hidden'
                                     }}
                                   >
                                     <div style={{ 
