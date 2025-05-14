@@ -6,6 +6,7 @@ import Fuse from 'fuse.js';
 import { FaTrash, FaFilter, FaSearch } from 'react-icons/fa';
 import musicalTie from "../assets/musical-tie.png";
 import * as d3 from 'd3';
+import { getBasePath } from '../utils/pathUtils';
 
 const NodeInfoBox = () => null;
 
@@ -68,8 +69,8 @@ const TestSigmaPage = () => {
     setIsLoading(true);
     setLoadingMessage('Initializing network...');
 
-    // Fetch the network data
-    fetch(import.meta.env.BASE_URL + '/data/network.json')
+    // Fetch the network data using the utility function
+    fetch(getBasePath('data/network.json'))
       .then(response => response.json())
       .then(data => {
         // Transform the data to match ForceGraph format
@@ -1023,7 +1024,10 @@ const TestSigmaPage = () => {
             textDecoration: 'none', 
             color: 'inherit',
             display: 'block',
-            pointerEvents: 'auto'  // Re-enable pointer events for the link
+            pointerEvents: 'auto',  // Re-enable pointer events for the link
+            position: 'relative',
+            width: isMobile ? 'auto' : 'auto',
+            left: isMobile ? '-15px' : '0'
           }}
         >
           <div style={{ position: 'relative' }}>
@@ -1046,7 +1050,7 @@ const TestSigmaPage = () => {
             <div 
               ref={titleRef}
               style={{ 
-                fontSize: '30px',
+                fontSize: isMobile ? '24px' : '30px',
                 display: 'block',
               }}
             >
@@ -1083,12 +1087,12 @@ const TestSigmaPage = () => {
         padding: 0,
         overflow: 'hidden'
       }}>
-        {/* Mobile Active Filters List */}
+        {/* Mobile Active Filters List - Updated positioning */}
         {isMobile && !isSidebarOpen && activeQueries.length > 0 && (
           <div style={{
             position: 'fixed',
             top: '20px',
-            right: '20px',
+            right: '10px',
             backgroundColor: '#2d5fff',
             color: 'white',
             padding: '8px',
@@ -1098,7 +1102,7 @@ const TestSigmaPage = () => {
             gap: '6px',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
             zIndex: 1001,
-            maxWidth: '150px',
+            maxWidth: '130px',
             maxHeight: 'calc(100vh - 120px)',
             overflowY: 'auto'
           }}>
@@ -1126,7 +1130,7 @@ const TestSigmaPage = () => {
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
-                  maxWidth: '100px'
+                  maxWidth: '80px'
                 }}>
                   {filter.value}
                 </span>
@@ -1202,8 +1206,12 @@ const TestSigmaPage = () => {
             left: isMobile ? '50%' : isSidebarOpen ? '62.5%' : '50%',
             transform: 'translate(-50%, -50%)',
             backgroundColor: 'white',
-            padding: '30px',
+            paddingTop: '10px',
+            paddingBottom: '20px',
+            paddingLeft: '20px',
+            paddingRight: '20px',
             borderRadius: '8px',
+            marginTop: '5px',
             color: '#2d5fff',
             textAlign: 'center',
             maxWidth: '80%',
@@ -1225,8 +1233,12 @@ const TestSigmaPage = () => {
             left: isMobile ? '50%' : isSidebarOpen ? '62.5%' : '50%',
             transform: 'translate(-50%, -50%)',
             backgroundColor: 'white',
-            padding: '30px',
+            paddingTop: '10px',
+            paddingBottom: '20px',
+            paddingLeft: '20px',
+            paddingRight: '20px',
             borderRadius: '8px',
+            marginTop: '5px',
             color: '#2d5fff',
             textAlign: 'center',
             maxWidth: '80%',
@@ -1288,9 +1300,17 @@ const TestSigmaPage = () => {
               cooldownTicks={isLayoutActive ? 60 : 45}
               onEngineStop={handleEngineStop}
               onNodeDragEnd={node => {
-                if (!isLayoutActive) {
+                if (!isLayoutActive && !isMobile) {
+                  // Only fix the position when drag ends
                   node.fx = node.x;
                   node.fy = node.y;
+                }
+              }}
+              onNodeDrag={isMobile ? null : (node, translate) => {
+                if (!isLayoutActive) {
+                  // During drag, just update the position without fixing it
+                  node.x = translate.x;
+                  node.y = translate.y;
                 }
               }}
               d3AlphaDecay={isLayoutActive ? 0.03 : 0.06}
@@ -1337,14 +1357,12 @@ const TestSigmaPage = () => {
                 ctx.globalAlpha = getLinkOpacity(link);
                 ctx.stroke();
               }}
-              enableNodeDrag={true}
+              enableNodeDrag={!isMobile}
               enablePointerInteraction={true}
               warmupTicks={0}
               minZoom={0.1}
               maxZoom={4}
               onZoom={null}
-              onNodeDrag={null}
-              onNodeDragStart={null}
               style={{
                 width: '100%',
                 height: '100%',

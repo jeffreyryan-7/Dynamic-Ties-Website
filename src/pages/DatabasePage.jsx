@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Papa from "papaparse";
+import { getBasePath } from '../utils/pathUtils';
 
 import Layout from "../components/Layout.jsx";
 import musicalTie from "../assets/musical-tie.png";
@@ -47,7 +48,7 @@ export default function DatabasePage() {
     }, 500);
 
     // Load CSV
-    fetch(import.meta.env.BASE_URL + 'data/frontend_dataview.csv')
+    fetch(getBasePath('data/frontend_dataview.csv'))
       .then((response) => response.text())
       .then((csvText) => {
         Papa.parse(csvText, {
