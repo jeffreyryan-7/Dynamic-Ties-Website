@@ -54,6 +54,7 @@ const TestSigmaPage = () => {
   const [showFilteredOutPopup, setShowFilteredOutPopup] = useState(false);
   const [filteredOutNode, setFilteredOutNode] = useState(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [showNodeCount, setShowNodeCount] = useState(false);
 
   // Initialize Fuse.js for fuzzy search
   const [fuse, setFuse] = useState(null);
@@ -717,7 +718,7 @@ const TestSigmaPage = () => {
   // Memoize the filtered data to prevent unnecessary recalculations
   const filteredData = useMemo(() => {
     const data = getFilteredGraphData();
-    const isTooLarge = data.nodes.length > 300;
+    const isTooLarge = data.nodes.length > 500;
     const isEmpty = data.nodes.length === 0;
     return {
       data,
@@ -732,15 +733,16 @@ const TestSigmaPage = () => {
     setLoadingMessage('Processing network...');
     
     // Check size before rendering
-    const isTooLarge = filteredData.data.nodes.length > 300;
+    const isTooLarge = filteredData.data.nodes.length > 510;
     const isEmpty = filteredData.data.nodes.length === 0 && activeQueries.length > 0; // Only show empty warning if there are active filters
     setShowNetworkTooLargeWarning(isTooLarge);
     setShowEmptyNetworkWarning(isEmpty);
     setShouldRenderGraph(!isTooLarge && !isEmpty);
     
-    // Hide loading after delay
+    // Hide loading after delay and show node count
     const timer = setTimeout(() => {
       setIsLoading(false);
+      setShowNodeCount(true);
     }, 500);
 
     return () => clearTimeout(timer);
@@ -779,7 +781,7 @@ const TestSigmaPage = () => {
     );
   
     // Draw label if zoomed in OR if filters are active OR if node is selected/connected OR if node is hovered/connected
-    if (globalScale > 2 || (globalScale > 1.5 && hasFilters) || isSelectedOrConnected || isHoveredOrConnected) {
+    if (globalScale > 2 || (globalScale > 1.8 && hasFilters) || isSelectedOrConnected || isHoveredOrConnected) {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#ffffff';
@@ -867,7 +869,7 @@ const TestSigmaPage = () => {
     // Add a stable bounding force
     force.bound = alpha => {
       const maxDistance = Math.min(dimensions.width, dimensions.height) * 
-        (isFiltered ? 0.3 : 0.6); // Larger area for sparse network
+        (isFiltered ? 0.2 : 0.6); // Larger area for sparse network
       const centerX = dimensions.width / 2;
       const centerY = dimensions.height / 2;
       
@@ -1024,7 +1026,7 @@ const TestSigmaPage = () => {
             textDecoration: 'none', 
             color: 'inherit',
             display: 'block',
-            pointerEvents: 'auto',  // Re-enable pointer events for the link
+            pointerEvents: 'auto',
             position: 'relative',
             width: isMobile ? 'auto' : 'auto',
             left: isMobile ? '-15px' : '0'
@@ -1056,6 +1058,22 @@ const TestSigmaPage = () => {
             >
               Dynamic Ties
             </div>
+            <div style={{
+              position: 'absolute',
+              top: isMobile ? '100%' : '50%',
+              left: isMobile ? '50%' : '100%',
+              transform: isMobile ? 'translateX(-50%)' : 'translateY(-50%)',
+              marginLeft: isMobile ? '0' : '15px',
+              marginTop: isMobile ? '5px' : '0',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              padding: '4px 8px',
+              borderRadius: '12px',
+              fontSize: isMobile ? '14px' : '16px',
+              color: 'white',
+              whiteSpace: 'nowrap'
+            }}>
+              {showNodeCount ? `${displayedNodeCount} nodes` : '-'}
+            </div>
           </div>
         </Link>
       </div>
@@ -1065,7 +1083,7 @@ const TestSigmaPage = () => {
         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)',
         position: 'absolute',
         top: '125px',
-        left: isSidebarOpen ? 'calc(50% + 10%)' : '50%',
+        left: isSidebarOpen ? 'calc(30em + 5em)' : '50%',
         transform: 'translateX(-50%)',
         zIndex: 1000,
         fontSize: isMobile ? '3.75rem' : '7.5rem',
@@ -1346,7 +1364,7 @@ const TestSigmaPage = () => {
                 // Use exact node size for hover area
                 ctx.fillStyle = color;
                 ctx.beginPath();
-                ctx.arc(node.x, node.y, size, 0, 2 * Math.PI, false);
+                ctx.arc(node.x, node.y, node.type === 'orchestra' ? 24 : node.type === 'school' ? 15 : 8, 0, 2 * Math.PI, false);
                 ctx.fill();
               }}
               linkCanvasObject={(link, ctx, globalScale) => {
@@ -1429,7 +1447,9 @@ const TestSigmaPage = () => {
           top: isMobile ? (isSidebarOpen ? '50vh' : '100vh') : '100px',
           left: '0',
           height: isMobile ? '50vh' : 'calc(100vh - 100px)',
-          width: isMobile ? '100%' : (isSidebarOpen ? '25%' : '0'),
+          width: isMobile ? '100%' : (isSidebarOpen ? '22em' : '0'),         
+          minWidth: isMobile ? undefined : (isSidebarOpen ? '12em' : '0'),  
+          maxWidth: isMobile ? undefined : (isSidebarOpen ? '28em' : '0'),
           transition: isInitialLoad ? 'none' : 'all 0.3s ease-in-out',
           backgroundColor: '#2d5fff',
           boxShadow: isSidebarOpen ? '0 -2px 5px rgba(0, 0, 0, 0.1)' : 'none',
@@ -1461,43 +1481,104 @@ const TestSigmaPage = () => {
             {/* Tab Headers */}
             <div style={{
               display: 'flex',
-              justifyContent: 'center',
-              gap: '20px',
+              flexDirection: isMobile ? 'row' : 'column',
+              justifyContent: isMobile ? 'center' : 'flex-start',
+              gap: isMobile ? '20px' : '12px',
               marginBottom: '20px',
               borderBottom: '2px solid rgba(255, 255, 255, 0.2)',
-              paddingBottom: '10px'
+              paddingBottom: isMobile ? '10px' : '15px'
             }}>
               <button
                 onClick={() => setActiveTab('query')}
                 style={{
-                  background: 'none',
+                  background: isMobile ? 'none' : (activeTab === 'query' ? 'rgba(255, 255, 255, 0.2)' : 'none'),
                   border: 'none',
+                  borderBottom: isMobile ? (activeTab === 'query' ? '3px solid white' : 'none') : 'none',
                   color: 'white',
-                  fontSize: '24px',
+                  fontSize: isMobile ? '20px' : '20px',
                   fontWeight: activeTab === 'query' ? 'bold' : 'normal',
                   cursor: 'pointer',
-                  padding: '5px 15px',
+                  padding: isMobile ? '8px 12px' : '12px 15px',
                   opacity: activeTab === 'query' ? 1 : 0.7,
-                  transition: 'all 0.2s ease-in-out'
+                  transition: 'all 0.2s ease-in-out',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: isMobile ? '8px' : '12px',
+                  borderRadius: isMobile ? '8px 8px 0 0' : '8px',
+                  width: isMobile ? 'auto' : '100%',
+                  textAlign: 'left',
+                  marginBottom: isMobile ? (activeTab === 'query' ? '-2px' : '0') : '0'
                 }}
               >
-                Filter
+                <div style={{
+                  backgroundColor: isMobile ? 'rgba(255, 255, 255, 0.1)' : (activeTab === 'query' ? 'transparent' : 'rgba(255, 255, 255, 0.1)'),
+                  padding: isMobile ? '6px' : '8px',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <FaFilter size={isMobile ? 16 : 20} />
+                </div>
+                {!isMobile && (
+                  <div>
+                    <div style={{ fontWeight: 'bold' }}>Filter Network</div>
+                    <div style={{ 
+                      fontSize: '14px', 
+                      opacity: 0.8,
+                      marginTop: '2px'
+                    }}>
+                      Find musicians by instrument, school, or orchestra
+                    </div>
+                  </div>
+                )}
+                {isMobile && <span>Filter</span>}
               </button>
               <button
                 onClick={() => setActiveTab('search')}
                 style={{
-                  background: 'none',
+                  background: isMobile ? 'none' : (activeTab === 'search' ? 'rgba(255, 255, 255, 0.2)' : 'none'),
                   border: 'none',
+                  borderBottom: isMobile ? (activeTab === 'search' ? '3px solid white' : 'none') : 'none',
                   color: 'white',
-                  fontSize: '24px',
+                  fontSize: isMobile ? '20px' : '20px',
                   fontWeight: activeTab === 'search' ? 'bold' : 'normal',
                   cursor: 'pointer',
-                  padding: '5px 15px',
+                  padding: isMobile ? '8px 12px' : '12px 15px',
                   opacity: activeTab === 'search' ? 1 : 0.7,
-                  transition: 'all 0.2s ease-in-out'
+                  transition: 'all 0.2s ease-in-out',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: isMobile ? '8px' : '12px',
+                  borderRadius: isMobile ? '8px 8px 0 0' : '8px',
+                  width: isMobile ? 'auto' : '100%',
+                  textAlign: 'left',
+                  marginBottom: isMobile ? (activeTab === 'search' ? '-2px' : '0') : '0'
                 }}
               >
-                Search
+                <div style={{
+                  backgroundColor: isMobile ? 'rgba(255, 255, 255, 0.1)' : (activeTab === 'search' ? 'transparent' : 'rgba(255, 255, 255, 0.1)'),
+                  padding: isMobile ? '6px' : '8px',
+                  borderRadius: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <FaSearch size={isMobile ? 16 : 20} />
+                </div>
+                {!isMobile && (
+                  <div>
+                    <div style={{ fontWeight: 'bold' }}>Search Network</div>
+                    <div style={{ 
+                      fontSize: '14px', 
+                      opacity: 0.8,
+                      marginTop: '2px'
+                    }}>
+                      Look up specific musicians, schools, or orchestras
+                    </div>
+                  </div>
+                )}
+                {isMobile && <span>Search</span>}
               </button>
             </div>
 
@@ -1743,7 +1824,21 @@ const TestSigmaPage = () => {
                           <input
                             type="checkbox"
                             checked={!useAndLogic}
-                            onChange={() => setUseAndLogic(!useAndLogic)}
+                            onChange={() => {
+                              // Set loading state immediately
+                              setIsLoading(true);
+                              setLoadingMessage('Updating network...');
+                              
+                              // Use requestAnimationFrame to ensure loading state is visible before heavy operations
+                              requestAnimationFrame(() => {
+                                setUseAndLogic(!useAndLogic);
+                                
+                                // Hide loading after a short delay to ensure smooth transition
+                                setTimeout(() => {
+                                  setIsLoading(false);
+                                }, 500);
+                              });
+                            }}
                             style={{
                               opacity: 0,
                               width: 0,

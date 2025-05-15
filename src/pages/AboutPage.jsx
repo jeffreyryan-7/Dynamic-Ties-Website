@@ -147,14 +147,38 @@ export default function LandingPage() {
         These ensembles were chosen roughly by a combination of prestige and budget, but are not based on any strict criterion. The data were pulled in April of 2025.
       </p>
 
+      <h2 className="text-xl font-semibold" style={{ fontSize: '1.5625rem' }}>Personal Data and Ethics Statement</h2>
+      <div style={{ height: "2.5px", backgroundColor: "#2d5fff", width: "100%", margin: "0.3125rem 0"}} />
+      <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem', margin: "0.6875rem 0" }} >
+        We take the following principles seriously:
+      </p>
+      <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem', margin: "0.6875rem 0" }} >
+        <strong>1. Public Information Only  </strong>
+        The data presented on this site is compiled entirely from publicly available sources, specifically musician biographies published on official orchestra websites. This includes: current orchestra affiliations, educational background, teachers and mentors (if mentioned in bios), past ensemble experience, awards, festivals, and other professional milestones.
+        We do not collect or display: personal contact information (emails, phone numbers), private social media content, or any information not already available through official sources
+      </p>
+      <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem', margin: "0.6875rem 0" }} >
+
+        <strong>2. No Judgments, Just Patterns  </strong>
+        The purpose of this site is not to evaluate individuals or institutions, but to explore how shared pathways and connections shape the orchestral profession. While certain trends may raise important questions, our analysis will seek to illuminate, not indict—focusing on structure over speculation.
+      </p>
+      <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem', margin: "0.6875rem 0" }} >
+
+        <strong>3. Respect for Individuals  </strong>
+        We respect the dignity and privacy of all individuals represented in this dataset. If you are unhappy with your information being presented or how it is presented, please reach out to <a href="mailto:data@dynamicties.org." className="text-blue-600 hover:underline" style={{ fontSize: '1.25rem' }}>data@dynamicties.org</a>.
+        Though we feel that this resource benefits from the data being as complete as possible, we also want to maintain respect for the people these data represent.  
+      </p>
+
       <h2 className="text-xl font-semibold" style={{ fontSize: '1.5625rem' }}>Contact us</h2>
       <div style={{ height: "2.5px", backgroundColor: "#2d5fff", width: "100%", margin: "0.3125rem 0"}} />
       <p className="text-base leading-relaxed" style={{ fontSize: '1.25rem', margin: "0.6875rem 0" }} >
         Have any comments, questions, or concerns? Want to collaborate? Have ideas for future research? Reach out anytime.
         <br />
         <span className="block mt-2 font-medium" style={{ fontSize: '1.25rem' }}>Jeffrey Ryan</span>
-        <a href="mailto:jcr101402@gmail.com" className="text-blue-600 hover:underline" style={{ fontSize: '1.25rem' }}>jcr101402@gmail.com</a>
+        <a href="mailto:info@dynamicties.org" className="text-blue-600 hover:underline" style={{ fontSize: '1.25rem' }}>info@dynamicties.org</a>
       </p>
+
+      
     </div>
     </Layout>
   );
