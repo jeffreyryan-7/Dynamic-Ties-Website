@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dynamic Ties</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #001f3f; /* solid dark blue */
+      color: white;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .logo-text-wrapper {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin: 20px 0 0;
+    }
+
+    .logo {
+      width: 100%;
+      height: auto;
+      max-width: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-text-wrapper">
+    <img
+      id="logo-img"
+      src="src/assets/musical-tie.png"
+      alt="Musical Arc Logo"
+      style="height: auto; margin-bottom: -20px;"
+    />    
+    <h1 id="logo-text">Dynamic Ties</h1>
+    </div>
+
+  <script>
+    // Match image width to text width
+    window.addEventListener('load', () => {
+      const text = document.getElementById('logo-text');
+      const image = document.getElementById('logo-img');
+      image.style.width = text.offsetWidth + 'px';
+    });
+  </script>
+</body>
+</html>
