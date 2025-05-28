@@ -82,52 +82,68 @@ export default function LandingPage() {
       </div>
 
       <div style={{ marginTop: '4rem' }}>
-        <h1 className="site-title leading-snug pb-1" style={{ fontSize: '3.125rem', marginBottom: '1rem' }}>Read analysis papers</h1>
-        <div style={{ height: "2.5px", backgroundColor: "#2d5fff", width: "100%", margin: "0rem 1rem 0.8rem 0rem", paddingTop: "0.3125rem" }} />
-        <h2 style={{ fontSize: "2.0625rem", marginBottom: "0.625rem", marginTop: "1.25rem", fontweight: 1000 , paddingBottom: "10rem", textAlign: "center"}}>Coming soon . . . </h2>
-        {/* <div style={{ padding: "1.25rem", maxWidth: "1125px", margin: "0 auto" }}>
-          {[
-            {
-              title: "Inside the Education Pipeline to Top Orchestras",
-              description: "An analysis of educational backgrounds among musicians in top U.S. orchestras.",
-              image: "https://via.placeholder.com/150"
-            },
-            {
-              title: "Where Musicians Migrate",
-              description: "Visualizing patterns in how musicians change location between college and orchestral jobs.",
-              image: "https://via.placeholder.com/150"
-            }
-          ].map((paper, index) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-                marginBottom: "2.5rem",
-                gap: "1.25rem"
-              }}
-            >
-              <div style={{ flex: 1 }}> */}
-                {/* <h2 style={{ fontSize: "1.5625rem", marginBottom: "0.625rem", fontweight: 1000 , paddingBottom: "0rem"}}>{paper.title}</h2>
-                <div style={{ height: "2.5px", backgroundColor: "#2d5fff", width: "100%", margin: "0rem 1rem 0.8rem 0rem", paddingTop: "0.3125rem" }} />
-                <p style={{ fontSize: "1.25rem", lineHeight: "1.5" }}>{paper.description}</p>
-              </div>
-              <img
-                src={paper.image}
-                alt={`Image for ${paper.title}`}
+      <h1 className="site-title leading-snug pb-1" style={{ fontSize: '3.125rem', marginBottom: '1rem' }}>
+        Read analysis papers
+      </h1>
+      <div style={{ padding: "3.25rem", maxWidth: "1125px", margin: "0 auto" }}>
+        {[
+          {
+            title: "Inside the Education Pipeline to Top Orchestras",
+            description: "An analysis of educational backgrounds among musicians in top U.S. orchestras.",
+            image: "/images/cum_dist_teaser.png",
+            pdfPath: "/papers/From_Studio_to_Symphony__An_Empirical_Study_of_Conservatory_Representation_in_American_Orchestras___Dynamic_Ties.pdf"
+          }
+        ].map((paper, index) => (
+          <a
+            key={index}
+            href={paper.pdfPath}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              marginBottom: "2.5rem",
+              gap: "1.25rem",
+              textDecoration: "none",
+              color: "inherit",
+              cursor: "pointer",
+              transition: "transform 0.2s ease-in-out",
+              ":hover": {
+                transform: "translateY(-2px)"
+              }
+            }}
+          >
+            <div style={{ flex: 1 }}>
+              <h2 style={{ fontSize: "1.5625rem", marginBottom: "0.625rem", fontWeight: 1000, paddingBottom: "0rem" }}>
+                {paper.title}
+              </h2>
+              <div
                 style={{
-                  width: "187.5px",
-                  height: "125px",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  flexShrink: 0
+                  height: "2.5px",
+                  backgroundColor: "#2d5fff",
+                  width: "100%",
+                  margin: "0rem 1rem 0.8rem 0rem",
+                  paddingTop: "0.3125rem"
                 }}
               />
+              <p style={{ fontSize: "1.25rem", lineHeight: "1.5" }}>{paper.description}</p>
             </div>
-          ))} */}
-        {/* </div> */}
+            <img
+              src={paper.image}
+              alt={`Image for ${paper.title}`}
+              style={{
+                width: "187.5px",
+                height: "125px",
+                objectFit: "cover",
+                borderRadius: "10px",
+                flexShrink: 0
+              }}
+            />
+          </a>
+        ))}
       </div>
+    </div>
     </Layout>
   );
 }
