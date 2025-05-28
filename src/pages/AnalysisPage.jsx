@@ -88,10 +88,10 @@ export default function LandingPage() {
       <div style={{ padding: "3.25rem", maxWidth: "1125px", margin: "0 auto" }}>
         {[
           {
-            title: "Inside the Education Pipeline to Top Orchestras",
+            title: "From Studio to Symphony",
             description: "An analysis of educational backgrounds among musicians in top U.S. orchestras.",
             image: "/images/cum_dist_teaser.png",
-            pdfPath: "/papers/From_Studio_to_Symphony__An_Empirical_Study_of_Conservatory_Representation_in_American_Orchestras___Dynamic_Ties.pdf"
+            pdfPath: "/papers/From_Studio_to_Symphony.pdf"
           }
         ].map((paper, index) => (
           <a
@@ -115,7 +115,7 @@ export default function LandingPage() {
             }}
           >
             <div style={{ flex: 1 }}>
-              <h2 style={{ fontSize: "1.5625rem", marginBottom: "0.625rem", fontWeight: 1000, paddingBottom: "0rem" }}>
+              <h2 style={{ fontSize: "1.5625rem", marginBottom: "0.625rem", paddingBottom: "0rem" }}>
                 {paper.title}
               </h2>
               <div
