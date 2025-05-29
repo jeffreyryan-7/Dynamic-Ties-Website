@@ -446,6 +446,34 @@ export default function DatabasePage() {
           </>
         ) : (
           <>
+            {/* Result Count Display */}
+            {data.length > 0 && (
+              <div style={{
+                marginTop: '1rem',
+                marginBottom: '0.25rem',
+                padding: '0.5rem 1rem',
+                backgroundColor: 'var(--blue-dark)',
+                borderRadius: '8px',
+                textAlign: 'center',
+                fontSize: '1.1rem',
+                color: 'var(--text-secondary)'
+              }}>
+                {filteredAndSortedData.length > 0 ? (
+                  <>
+                    Showing <strong>{indexOfFirstRow + 1}-{Math.min(indexOfLastRow, filteredAndSortedData.length)}</strong> of{' '}
+                    <strong>{filteredAndSortedData.length}</strong> {filteredAndSortedData.length === 1 ? 'result' : 'results'}
+                    {Object.values(filters).some(filterSet => filterSet.size > 0) && (
+                      <span style={{ fontStyle: 'italic', marginLeft: '0.5rem' }}>
+                        (filtered from {data.length} total)
+                      </span>
+                    )}
+                  </>
+                ) : (
+                  <span>No results found</span>
+                )}
+              </div>
+            )}
+
             {/* Data Table Viewer */}
             <div style={{ 
               padding: '50px',
